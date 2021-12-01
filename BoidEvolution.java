@@ -59,7 +59,6 @@ public class BoidEvolution {
                         // update trial fitnesses; prey and predator fitnesses are opposite
                         predatorPopulation.getIndividual(i).setTrial(trial, simResult);
                         preyPopulation.getIndividual(i).setTrial(trial, -simResult);
-
                         */
                         
                     }
