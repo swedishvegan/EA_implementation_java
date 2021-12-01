@@ -9,9 +9,8 @@ public class BoidIndividual implements Individual {
     protected final static double MAX_GENE_RANGE = 5.0;
     protected final static double MIN_GENE_RANGE = 1.0;
 
-	protected final static int DIMENSION = 30;
+	protected final static int DIMENSION = 4;
     protected static final int NUM_TRIALS = 3; // Must be <= POPULATION_SIZE in BoidEvolution, may need better way to set
-	protected final static double MUTATION_START_RADIUS = 5.0;
 	protected final static double MUTATION_PROBABILITY = 0.1;
 	protected final static double CROSSOVER_PROBABILITY = 0.5;
 
@@ -21,13 +20,6 @@ public class BoidIndividual implements Individual {
 
     // Individual's fitness trials - used to calculate individual's total fitness
     protected double[] trials;
-
-	// Mutation radius -- applies to ALL individuals.
-    // NOT SURE IF NEEDED!!
-	protected static double MUTATION_RADIUS = MUTATION_START_RADIUS;
-	
-	public static void decayMutationRadius(double decay) { MUTATION_RADIUS *= decay; }
-	public static void resetMutationRadius() { MUTATION_RADIUS = MUTATION_START_RADIUS; }
 
     // Flag for whether fitness has been calculated
     // NOT SURE IF NEEDED/SHOULD BE USED IN COEVOLUTION!!!
@@ -62,7 +54,7 @@ public class BoidIndividual implements Individual {
         // check if fitness needs to be updated (REMOVE???)
         if (fitnessNeedsUpdate) {
             totalFitness = 0.0;
-            for (int i = 0; i < DIMENSION; i++) {
+            for (int i = 0; i < NUM_TRIALS; i++) {
                 totalFitness += trials[i];
             }
             fitnessNeedsUpdate = false;

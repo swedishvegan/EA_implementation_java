@@ -1,10 +1,12 @@
-import ea.Population;
+import java.util.Arrays;
+
 import ea.Individual;
 import ea.Selector;
 import implementations.ProportionalSelector;
+import implementations.BoidPopulation;
 import implementations.BoidIndividual;
+//import boidEvolution.*;
 
-import java.util.Random;
 
 public class BoidEvolution {
     // CONSTANTS
@@ -14,8 +16,8 @@ public class BoidEvolution {
     protected final static double MUTATION_RADIUS_DECAY = 0.98; // NOT SURE IF NEEDED
 
     public static void main(String[] args) {
-		double[] predatorResults = new double[RUNS];
-		double[] preyResults = new double[RUNS];
+		double[] predatorResults = new double[MAX_GENERATIONS];
+		double[] preyResults = new double[MAX_GENERATIONS];
 		
 		for (int run = 0; run < RUNS; run++) {
 			
@@ -27,11 +29,12 @@ public class BoidEvolution {
                 preyBoids[i] = new BoidIndividual();
             }
 			
-			// Create selector.
+			// Create selector
+            // create new populations
+            BoidPopulation predatorPopulation = new BoidPopulation(predatorBoids);
+            BoidPopulation preyPopulation = new BoidPopulation(preyBoids);
 			Selector selector = new ProportionalSelector();
 			
-			// Reset BoidIndividual mutation radius for each run.
-			BoidIndividual.resetMutationRadius();
 			
 			for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
 				
@@ -42,29 +45,26 @@ public class BoidEvolution {
                 // perform for number of trials
                 for (int trial = 0; trial < BoidIndividual.getNumTrials(); trial++) {
                     // shuffle all individuals
-                    /*
-                    shuffle(predatorBoids);
-                    shuffle(preyBoids);
-                    */
+                    predatorPopulation.shuffle();
+                    preyPopulation.shuffle();
 
-                    // simulate competitions between matching predator and prey
+
+                    // simulate competitions/trials between matching predator and prey
                     for (int i = 0; i < POPULATION_SIZE; i++) {
                         /*
-                        simResult = sim.simulate(predatorBoids[i].getGenome(), preyBoids[i].getGenome());
+                        simResult = sim.simulate(predatorPopulation.getIndividual(i).getGenome(), preyPopulation.getIndividual(i).getGenome());
 
                         // posibly manipulatae simResult if not handled in sim.simulate()
 
                         // update trial fitnesses; prey and predator fitnesses are opposite
-                        predatorBoids[i].setTrial(trial, simResult);
-                        preyBoids[i].setTrial(trial, -simResult);
-                        
+                        predatorPopulation.getIndividual(i).setTrial(trial, simResult);
+                        preyPopulation.getIndividual(i).setTrial(trial, -simResult);
+
                         */
+                        
                     }
                 }
 
-                // create new populations
-                Population predatorPopulation = new Population(predatorBoids);
-                Population preyPopulation = new Population(preyBoids);
 
                 //####################
                 // END COEVOLUTION
@@ -73,11 +73,11 @@ public class BoidEvolution {
                 // Update individual populations
 				predatorPopulation.runGeneration(selector);
 				preyPopulation.runGeneration(selector);
-				BoidIndividual.decayMutationRadius(MUTATION_RADIUS_DECAY);
 
-                predatorResults[run] = predatorPopulation.maxFitness();
-                preyResults[run] = preyPopulation.maxFitness();
+                predatorResults[generation] = predatorPopulation.maxFitness();
+                preyResults[generation] = preyPopulation.maxFitness();
 			}
+            
             
             System.out.println("Run #" + run + " Results....");
             for (int gen = 0; gen < MAX_GENERATIONS; gen++) {
@@ -88,17 +88,4 @@ public class BoidEvolution {
 		}
 		
     }
-
-        // Implementing Fisher–Yates shuffle
-        public static void shuffle(Individual[] array) {
-            int index;
-            Individual temp;
-            Random random = new Random();
-            for (int i = array.length - 1; i > 0; i--) {
-                index = random.nextInt(i + 1);
-                temp = array[index];
-                array[index] = array[i];
-                array[i] = temp;
-            }
-        }  
 }
