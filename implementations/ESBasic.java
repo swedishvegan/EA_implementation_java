@@ -5,10 +5,13 @@ import ea.Individual;
 public class ESBasic implements Individual {
 	
 	// Just declaring some constants that will be used later	
-	protected final static int DIMENSION = 100;
+	protected final static int DIMENSION = 5;
 	protected final static double MIN_VAR = -DIMENSION;
 	protected final static double MAX_VAR = DIMENSION;
 	
+	
+	protected final static double PI = 3.14159;
+	protected final static double E = 2.71828;
 	
 	//at 80% mutation probability, around 6/7 children are mutated
 	//this tends to mean each individual will likely continue
@@ -45,18 +48,49 @@ public class ESBasic implements Individual {
 		
 		for(int i=0; i<DIMENSION; ++i){
 			vect[i] = r_range();
-			sigma = r_mut_range();
 			}
+		sigma = r_mut_range();
+		fitnessNeedsUpdate = true;
 		
 	}
 	
 	protected ESBasic(double sep, double align, double coh) { 
 		vect = new double[DIMENSION];
+		fitnessNeedsUpdate = true;
 	}
 	
 	protected ESBasic(double [] genome, double sigma_gene) { 
 		vect = genome;
 		sigma = sigma_gene;
+		fitnessNeedsUpdate = true;
+	}
+	
+	public String repString(){
+		String rep = String.valueOf(fitness()) + "[";
+		for(int i=0; i<DIMENSION; ++i){
+			rep = rep + String.valueOf(vect[i]) + ", ";
+			}
+		sigma = r_mut_range();
+		rep = rep + "] " + String.valueOf(sigma);
+		return rep;
+	}
+	
+	private double customFunct() {
+		
+		// Computation of a specific function.
+		double sum = 0.0;//, sum2 = 0.0;
+		
+		for (int i = 0; i < DIMENSION; i++) { sum += -Math.pow((vect[i] - 2), 2);}
+		return sum;
+	}
+	
+	private double ackleyFunct() {
+		// Computation of Ackley's function.
+		double sum1 = 0.0, sum2 = 0.0;
+		for (int i = 0; i < DIMENSION; i++) { sum1 += vect[i] * vect[i]; sum2 += Math.cos(2.0 * PI * vect[i]); }
+		sum1 = -0.2 * Math.sqrt(sum1 / (double)DIMENSION); sum2 /= (double)DIMENSION;
+		return -20.0 * Math.exp(sum1) - Math.exp(sum2) + 20.0 + E;
+
 	}
 	
 	@Override
@@ -67,11 +101,7 @@ public class ESBasic implements Individual {
 		
 		if (!fitnessNeedsUpdate) return fitness;
 		
-		// Computation of a specific function.
-		double sum = 0.0;//, sum2 = 0.0;
-		
-		for (int i = 0; i < DIMENSION; i++) { sum += -Math.pow((vect[i] - 2), 2);}
-		fitness = sum ;
+		fitness = ackleyFunct();
 		
 		fitnessNeedsUpdate = false;
 		return fitness;

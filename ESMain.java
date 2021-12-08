@@ -13,9 +13,9 @@ import implementations.ESBasic;
 
 public class ESMain {
 	
-	protected final static int POP_SIZE = 500;
+	protected final static int POP_SIZE = 250;
 	protected final static int TRIALS = 10;
-	protected final static int MAX_GENERATIONS = 400;
+	protected final static int MAX_GENERATIONS = 10;
 	
 	public static void main(String[] args) {
 		
@@ -29,7 +29,7 @@ public class ESMain {
 			
 			// First we initialize all the individuals.
 			Individual[] individuals = new Individual[POP_SIZE];
-			for (int i = 0; i < POP_SIZE; i++) individuals[i] = new ESBasic();
+			for (int i = 0; i < POP_SIZE; i++) {individuals[i] = new ESBasic();}
 			
 			// Create population and selector.
 			ESPopulation population = new ESPopulation(individuals);
@@ -42,7 +42,7 @@ public class ESMain {
 				
 			}
 			
-			results[trial] = -population.maxFitness();
+			results[trial] = population.minFitness();
 			
 		}
 		
