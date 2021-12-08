@@ -1,10 +1,11 @@
 package implementations;
 
 import ea.Individual;
+import ea.Population;
 //import ea.Selector;
 // ESPopulation class.
 
-public class ESPopulation {
+public class ESPopulation extends Population{
 	
 	//current two populations in case mulambda is used instead of mu+lambda
 	protected Individual[] pop;
@@ -31,19 +32,20 @@ public class ESPopulation {
 	// and a runtime error will most likely occur.
 	//@Override
 	public ESPopulation(Individual[] population) {
+		super(population);
 		
+		//probably unnecessary 
 		popsize = population.length;
 		
 		gen = 0;
 		pop = new Individual[popsize];
-		pop_temp = new Individual[popsize];
-		children = new Individual[popsize*numoffspring];
-		
-		
-		pop_temp = new Individual[popsize*numoffspring];
-		
 		for (int i = 0; i < popsize; i++) pop[i] = population[i];
 		updateStats();
+		//end probably unnecessary
+		
+		children = new Individual[popsize*numoffspring];
+		pop_temp = new Individual[popsize*numoffspring];
+		
 		
 	}
 	
