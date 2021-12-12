@@ -1,4 +1,3 @@
-import ea.Population;
 import ea.Individual;
 import ea.Selector;
 import implementations.ProportionalSelector;
@@ -33,7 +32,7 @@ public class Main {
 			for (int i = 0; i < POP_SIZE; i++) individuals[i] = new AckleyIndividual();
 			
 			// Create population and selector.
-			Population population = new Population(individuals);
+			FileWritePopulation population = new FileWritePopulation(individuals, MAX_GENERATIONS);
 			Selector selector = new ProportionalSelector();
 			
 			// Reset AckleyIndividual mutation radius for each trial.
@@ -47,12 +46,13 @@ public class Main {
 			}
 			
 			results[trial] = -population.maxFitness();
+			population.writeData("trial" + Integer.toString(trial) + ".txt", 20);
 			
 		}
 		
 		System.out.println("Results....");
 		for (int trial = 0; trial < TRIALS; trial++) System.out.println("\tTrial " + Integer.toString(trial + 1) + "/" + Integer.toString(TRIALS) + ": optimum = " + Double.toString(results[trial]));
-		
+				
 	}
 	
 }
